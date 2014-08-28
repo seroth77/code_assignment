@@ -1,0 +1,10 @@
+.container{ padding-top: 30px; }
+.form-container{ padding-bottom: 30px; }
+#zipCodeEntry{ text-align: center; }
+.degreesFont{
+	font: 40px Verdana;
+	color: white;
+}
+.currentInfo{ text-align: center; }
+.forecastInfo{ background-color: #FFFAF0; }
+h1{ text-align: center; }
