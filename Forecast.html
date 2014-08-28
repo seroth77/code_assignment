@@ -2,70 +2,61 @@
 <html ng-app="weather">
 	<head>
 		<title>Yahoo Weather Assignment</title>
-		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-		<style>
-			#zipCodeEntry{ text-align: center; }
-		</style>
+		<link rel="stylesheet" type="text/css" href="http://bootswatch.com/spacelab/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="styles/style.css">
 	</head>
 	<body>
-		<div ng-controller="WeatherController">
-			<form id="zipCodeEntry" class="form-inline" role="form">
-				<div class="form-group">
-					<label for="zipEntry">Zip Code:</label>
-					<input id="zipEntry" class="form-control" type="textbox" placeholder="e.g. 32792" ng-model="zipCode" />
-					<button type="button" class="btn btn-primary" ng-click="fetchWeather(zipCode)">Get Forecast</button>
-				</div>
-			</form>
+		<div class="container row">
+			<div class="col-md-12">
+				<div ng-controller="WeatherController">
+					<div class="form-container">
+						<form id="zipCodeEntry" class="form-inline" role="form">
+							<div class="form-group">
+								<label for="zipEntry">Zip Code:</label>
+								<input id="zipEntry" class="form-control" type="textbox" placeholder="e.g. 32792" ng-model="zipCode" />
+								<button type="button" class="btn btn-primary" ng-click="fetchWeather(zipCode)">Get Forecast</button>
+							</div>
+						</form>
+					</div>
 
-			<div class="container-fluid">
-				<h1>{{newWeather.location.city}},{{newWeather.location.region}}.</h1>
-				<h2>Current: {{ newWeather.item.condition.text }} | {{ newWeather.item.condition.temp }}&deg; <img src="http://l.yimg.com/a/i/us/we/52/{{newWeather.item.condition.code}}.gif"/></h2>
-				<div class="row">
-					<div ng-repeat="forecast in newWeather.item.forecast" class="col-md-4">
-						<div class="panel panel-info">
-							<div class="panel-heading">
-								<strong>{{ forecast.date | date:'MMM-dd yyyy' }}</strong>
+					<div class="panel panel-default">
+						<h1>{{newWeather.location.city}}, {{newWeather.location.region}}</h1>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="list-group">
+									<div class="list-group-item active currentInfo">
+										<div><strong>Today: {{ todayDate }}</strong></div>
+										<div><img align="center" src="https://s.yimg.com/zz/combo?a/i/us/nws/weather/gr/{{newWeather.item.condition.code}}{{dayNight}}.png" /></div>
+										<div>{{ newWeather.item.condition.text }}</div>
+										<div class="degreesFont">{{ newWeather.item.condition.temp }}&deg;</div>
+										<div>Feels like: {{ heatIndex }}&deg;</div>
+										<div>&nbsp;</div>
+										<div>Sunrise: {{ newWeather.astronomy.sunrise }}</div>
+										<div>Sunset: {{ newWeather.astronomy.sunset }}</div>
+									</div>
+								</div>
 							</div>
-							<div class="panel-body">
-								<img src="http://l.yimg.com/a/i/us/we/52/{{forecast.code}}.gif"/>
-								{{ forecast.text }}
-								<p>H: {{ forecast.high }}&deg; | L: {{ forecast.low }}&deg;</p>
-							</div>
-						</div>
-		        	</div>
-		    	</div>
+							<div class="col-md-9">
+								<div class="row">
+									<div ng-repeat="forecast in newWeather.item.forecast" class="col-md-3">
+										<div class="list-group">
+											<div class="list-group-item forecastInfo currentInfo">
+												<div><strong>{{ forecast.day }} {{ forecast.date }}</strong></div>
+												<div><img align="center" src="https://s.yimg.com/zz/combo?a/i/us/nws/weather/gr/{{forecast.code}}d.png" /></div>
+												<div>{{ forecast.text }}</div>
+												<div>H: {{ forecast.high }}&deg;</div>
+												<div>L: {{ forecast.low }}&deg;</div>
+											</div>
+										</div>
+			        				</div>
+			        			</div>
+			        		</div>
+			    		</div>
+			    	</div>
+				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
-		<script type="text/javascript">
-			(function(){
-				// create moduel directive
-				var app = angular.module('weather',[]);
-				// create controller
-				app.controller('WeatherController', ['$scope', '$http', function($scope, $http){
-					// get the submit click event
-					$scope.fetchWeather = function(zip){
-						// clear the weather object
-						$scope.newWeather = {};
-						// get the weather based on zip code
-						getWeather(zip);
-					}
-
-					// this function will use the Yahoo API to retrieve the weather information
-					// based on user entered zip code information
-					function getWeather(zip){
-						// Make the JSON Rest call
-						$http.get('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20location%3D'+zip+'&format=json&diagnostics=true&callback=')
-							.then(function(data){
-								// upon completion set the returned JSON object to the scope object
-								$scope.newWeather = data.data.query.results.channel;
-							});
-					}
-
-					// default set the weather 
-					getWeather('32792');
-				}]);
-			})();
-		</script>
+		<script type="text/javascript" src="scripts/angular.min.js"></script>
+		<script type="text/javascript" src="scripts/app.js"></script>
 	</body>
 </html>
